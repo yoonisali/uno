@@ -1,3 +1,5 @@
+import Card from "./card";
+
 export default class Game {
   constructor(humanName) {
     this.humanTurn = true;
@@ -9,7 +11,7 @@ export default class Game {
       name: humanName,
       hand: this.makeHand()
     };
-    this.currentCard = this.firstCard(); 
+    this.currentCard = this.firstCard();
   }
 
   makeHand() {
@@ -37,20 +39,16 @@ export default class Game {
       color = null;
     }
     this.uidCounter++;
-    return {
-      color: color,
-      value: value,
-      uid: this.uidCounter
-    };
+    return new Card(color, value, this.uidCounter);
   }
-  
+
   firstCard() {
     const randomNumber = Math.floor(Math.random() * 10);
-    let card = this.randomCard(); 
+    let card = this.randomCard();
     if (card.value === "wild" || card.value === "wild4") {
       card.value = randomNumber.toString();
     }
-    return card; 
+    return card;
   }
 
   changeTurn() {
@@ -61,26 +59,4 @@ export default class Game {
       turn = true;
     }
   }
-
 }
-
-// Console Testing -------------------------------
-let game = new Game("Yoonis");
-console.log(game);
-
-
-
-// function Player(human, bot) {
-//   this.human = human;
-//   this.bot = bot;
-// }
-
-
-
-// Player.prototype.assignTurn = function () {
-//   // let human = this.human
-//   // let bot = this.bot;
-//   // let playerTurn = true;
-//   // let botPlayers = [bot1, bot2, bot3];
-// };
-

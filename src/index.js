@@ -1,4 +1,4 @@
-import Game from './js/business.js'
+import Game from './js/game.js';
 import './css/styles.css';
 import "bootstrap";
 import * as $ from "jquery";
