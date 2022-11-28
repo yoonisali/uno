@@ -1,7 +1,7 @@
 :root {
     --card-width: 15vw;
     --card-height: 15vh;
-    --card-pop: 8vh;
+    --card-pop: 4vh;
 }
 
 .player-spot {
@@ -19,7 +19,6 @@
     bottom: 40px;
     display: flex;
     justify-content: center;
-    max-width: 60vw;
 }
 
 .top {
@@ -27,11 +26,10 @@
     top: 40px;
     display: flex;
     justify-content: center;
-    max-width: 60vw;
 }
 
 .card {
-    margin-left: -3vw;
+    margin-left: -2vw;
     max-width: var(--card-width);
 }
 
