@@ -15,10 +15,10 @@ export default class Game {
   }
 
   makeHand() {
-    let hand = [];
+    let hand = {};
     for (let i = 0; i < 7; i++) {
       const card = this.randomCard();
-      hand.push(card);
+      hand[card.uid] = card;
     }
     return hand;
   }
@@ -28,14 +28,14 @@ export default class Game {
     const randomNumber = Math.floor(Math.random() * 14);
     const wildRandom = Math.floor(Math.random() * 2);
     const colorRandom = Math.floor(Math.random() * 4);
-    const possibleValues = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "skip", "reverse", "+2", "wild"];
+    const possibleValues = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Ø", "§", "+2", "W"];
     let value = possibleValues[randomNumber];
-    if (value === "wild" && wildRandom === 1) {
-      value = "wild4";
+    if (value === "W" && wildRandom === 1) {
+      value = "W4";
     }
     const possibleColors = ["red", "blue", "green", "yellow"];
     let color = possibleColors[colorRandom];
-    if (value === "wild" || value === "wild4") {
+    if (value === "W" || value === "W4") {
       color = null;
     }
     this.uidCounter++;
