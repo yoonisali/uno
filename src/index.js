@@ -2,18 +2,24 @@ import './css/styles.css';
 
 class Game {
   constructor(humanName) {
-    this.humanName = humanName;
-    this.turn = true;
-    this.bot = {};
+    this.humanTurn = true;
     this.uidCounter = 0;
+    this.bot = {
+      hand: this.makeHand()
+    };
+    this.human = {
+      name: humanName,
+      hand: this.makeHand()
+    };
   }
 
-  makeBot() {
-    this.bot["hand"] = [];
+  makeHand() {
+    let hand = [];
     for (let i = 0; i < 7; i++) {
-      const card = Game.randomCard();
-      this.bot["hand"].push(card);
+      const card = this.randomCard();
+      hand.push(card);
     }
+    return hand;
   }
 
 
@@ -27,7 +33,10 @@ class Game {
       value = "wild4";
     }
     const possibleColors = ["red", "blue", "green", "yellow"];
-    const color = possibleColors[colorRandom];
+    let color = possibleColors[colorRandom];
+    if (value === "wild" || value === "wild4") {
+      color = null;
+    }
     this.uidCounter++;
     return {
       color: color,
@@ -37,17 +46,18 @@ class Game {
   }
   
 
-  // changeTurn() {
-  //   let turn = this.turn;
-  //   if (turn === true) {
-  //     turn = false;
-  //   } else if (turn === false) {
-  //     turn = true;
-  //   }
-  // }
+  changeTurn() {
+    let turn = this.humanTurn;
+    if (turn === true) {
+      turn = false;
+    } else if (turn === false) {
+      turn = true;
+    }
+  }
 
 }
 
+// Console Testing -------------------------------
 let game = new Game("Yoonis");
 console.log(game);
 
