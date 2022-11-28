@@ -1,0 +1,59 @@
+:root {
+    --card-width: 15vw;
+    --card-height: 15vh;
+    --card-pop: 4vh;
+}
+
+.player-spot {
+    display: flex;
+    justify-content: center;
+}
+
+.opponent-spot {
+    display: flex;
+    justify-content: center;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.top {
+    position: absolute;
+    top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    margin-left: -2vw;
+    max-width: var(--card-width);
+}
+
+.card-body {
+    height: var(--card-height);
+    background-color: green;
+    box-shadow: 2px 2px 2px 2px rgb(188, 187, 187);
+    border-radius: 4px;
+}
+
+.opponent-card .card-body {
+    background-color: black;
+}
+
+.opponent-card .card-body .card-title {
+    font-size: 200%;
+}
+
+.player-card:hover {
+    margin-top: calc(var(--card-pop) * -1);
+    margin-bottom: var(--card-pop);
+}
+
+.card-title {
+    color: white;
+    font-size: 7rem;
+}
