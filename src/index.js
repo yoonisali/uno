@@ -4,13 +4,16 @@ import "bootstrap";
 import * as $ from "jquery";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-$(".opponent-card").html(`
-    <div class="card-body">
-        <h5 class="card-title">Uno</h5>
-    </div>
-`);
-
 let game = new Game("Yoonis");
-console.log(game); 
-console.log(game.checkValid(9));
 
+const playerSpot = $(".bottom");
+for (let i = 0; i < Object.values(game.human.hand).length; i++) {
+  const nCard = Object.values(game.human.hand)[i];
+  nCard.render(true).appendTo(playerSpot);
+}
+
+const botSpot = $(".top");
+for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
+  const nCard = Object.values(game.bot.hand)[i];
+  nCard.render(false).appendTo(botSpot);
+}
