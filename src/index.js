@@ -11,4 +11,6 @@ $(".opponent-card").html(`
 `);
 
 let game = new Game("Yoonis");
-console.log(game);
+console.log(game); 
+console.log(game.checkValid(9));
+
