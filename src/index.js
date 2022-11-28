@@ -1,3 +1,4 @@
+import Game from './js/business.js'
 import './css/styles.css';
 import "bootstrap";
 import * as $ from "jquery";
@@ -8,3 +9,6 @@ $(".opponent-card").html(`
         <h5 class="card-title">Uno</h5>
     </div>
 `);
+
+let game = new Game("Yoonis");
+console.log(game);
