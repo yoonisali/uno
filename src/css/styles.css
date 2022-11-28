@@ -9,11 +9,25 @@
     justify-content: center;
 }
 
+.opponent-spot {
+    display: flex;
+    justify-content: center;
+}
+
 .bottom {
     position: absolute;
     bottom: 40px;
     display: flex;
     justify-content: center;
+    max-width: 60vw;
+}
+
+.top {
+    position: absolute;
+    top: 40px;
+    display: flex;
+    justify-content: center;
+    max-width: 60vw;
 }
 
 .card {
@@ -28,7 +42,15 @@
     border-radius: 4px;
 }
 
-.card:hover {
+.opponent-card .card-body {
+    background-color: black;
+}
+
+.opponent-card .card-body .card-title {
+    font-size: 200%;
+}
+
+.player-card:hover {
     margin-top: calc(var(--card-pop) * -1);
     margin-bottom: var(--card-pop);
 }
