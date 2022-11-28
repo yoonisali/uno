@@ -1,0 +1,39 @@
+:root {
+    --card-width: 15vw;
+    --card-height: 15vh;
+    --card-pop: 8vh;
+}
+
+.player-spot {
+    display: flex;
+    justify-content: center;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    margin-left: -3vw;
+    max-width: var(--card-width);
+}
+
+.card-body {
+    height: var(--card-height);
+    background-color: green;
+    box-shadow: 2px 2px 2px 2px rgb(188, 187, 187);
+    border-radius: 4px;
+}
+
+.card:hover {
+    margin-top: calc(var(--card-pop) * -1);
+    margin-bottom: var(--card-pop);
+}
+
+.card-title {
+    color: white;
+    font-size: 7rem;
+}
