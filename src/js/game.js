@@ -1,4 +1,4 @@
-import Card from "./card";
+import Card from "./card.js";
 
 export default class Game {
   constructor(humanName) {
@@ -59,4 +59,15 @@ export default class Game {
       turn = true;
     }
   }
+
+  checkValid(uid) {
+    let card = this.human.hand[uid];
+    let currentCard = this.currentCard;
+    if (card.color === currentCard.color || card.value === currentCard.value || card.value === "wild" || card.value === "wild4") {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
+
