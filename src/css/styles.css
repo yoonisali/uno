@@ -4,6 +4,10 @@
     --card-pop: 4vh;
 }
 
+#deck-btn {
+    cursor: pointer;
+}
+
 .player-spot {
     display: flex;
     justify-content: center;
@@ -12,6 +16,23 @@
 .opponent-spot {
     display: flex;
     justify-content: center;
+}
+
+.opponent-spot {
+    display: flex;
+    justify-content: center;
+}
+
+.center {
+    position: absolute;
+    top: 45vh;
+    left: 45vw;
+    display: flex;
+    justify-content: center;
+}
+
+.center .deck {
+    margin-right: 3vw;
 }
 
 .bottom {
@@ -45,6 +66,14 @@
 }
 
 .opponent-card .card-body .card-title {
+    font-size: 200%;
+}
+
+.deck .card-body {
+    background-color: black;
+}
+
+.deck .card-body .card-title {
     font-size: 200%;
 }
 
