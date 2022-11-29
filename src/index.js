@@ -27,7 +27,16 @@ $(".player-card").on("click", (c) => {
   console.log(elId);
 });
 
-$("#deck-btn").on("click", () => {
-  game.draw();
-  console.log(game.human.hand);
+$("#deck-btn").on("click", (c) => {
+  if (game.canDraw) {
+    game.canDraw = false;
+    setTimeout(() => {
+      if (!c.currentTarget.classList.contains("disabled")) {
+        game.draw();
+        game.canDraw = true;
+        console.log(game.human.hand);
+        c.currentTarget.classList.add("disabled");
+      }
+    }, 500);
+  }
 });
