@@ -37,6 +37,7 @@ $("#deck-btn").on("click", (c) => {
     game.canDraw = false;
     setTimeout(() => {
       if (c.currentTarget.classList.contains("disabled") === false) {
+        console.log("drew a card");
         game.draw();
         game.canDraw = true;
         c.currentTarget.classList.add("disabled");

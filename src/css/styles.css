@@ -12,6 +12,12 @@ pre {
 
 #deck-btn {
     cursor: pointer;
+    opacity: 100%;
+}
+
+#deck-btn.disabled {
+    cursor: default;
+    opacity: 65%;
 }
 
 .player-spot {
