@@ -20,8 +20,14 @@ for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
 const playSpot = $(".game-spot");
 const nCard = game.currentCard;
 nCard.render(2).appendTo(playSpot);
+console.log(game.human.hand);
 
 $(".player-card").on("click", (c) => {
   const elId = c.currentTarget.getAttribute("id").replace("card-", "");
   console.log(elId);
+});
+
+$("#deck-btn").on("click", () => {
+  game.draw();
+  console.log(game.human.hand);
 });

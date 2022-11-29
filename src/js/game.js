@@ -27,6 +27,7 @@ export default class Game {
 
 
   randomCard() {
+    this.uidCounter++;
     const randomNumber = Math.floor(Math.random() * 14);
     const wildRandom = Math.floor(Math.random() * 2);
     const colorRandom = Math.floor(Math.random() * 4);
@@ -40,8 +41,17 @@ export default class Game {
     if (value === "W" || value === "W4") {
       color = null;
     }
-    this.uidCounter++;
     return new Card(color, value, this.uidCounter);
+  }
+
+  draw() {
+    const ref = this;
+    function addCard(hand) {
+      const card = ref.randomCard();
+      hand[card.uid.toString()] = card;
+    }
+    this.humanTurn ?
+      addCard(this.human.hand) : addCard(this.human.bot);
   }
 
   firstCard() {
