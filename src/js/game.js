@@ -81,6 +81,9 @@ export default class Game {
   endButton() {
     if(this.humanTurn === true && this.turnType === "draw") {
       this.changeTurn();
+    } else if(this.humanTurn && this.turnType === "normal") {
+      this.draw(); 
+      this.changeTurn(); 
     }
   }
 
