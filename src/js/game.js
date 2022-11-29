@@ -18,7 +18,7 @@ export default class Game {
     let hand = {};
     for (let i = 0; i < 7; i++) {
       const card = this.randomCard();
-      hand[card.uid] = card;
+      hand[card.uid.toString()] = card;
     }
     return hand;
   }
@@ -69,5 +69,38 @@ export default class Game {
       return false;
     }
   }
+
+  playCard(uid) {
+    let playedCard = this.human.hand[uid];
+    let value = playedCard.value;
+    this.currentCard = playedCard; 
+    delete this.human.hand[uid];
+    this.humanTurn = false;
+    let wild = false;
+    if (value === "reverse" || value === "skip") {
+      this.humanTurn = true; 
+    } else if (value === "+2") {
+      let card1 = this.randomCard(); 
+      let card2 = this.randomCard(); 
+      this.bot.hand[card1.uid] = card1; 
+      this.bot.hand[card2.uid] = card2;
+    } else if (value === "wild4") {
+      let card1 = this.randomCard(); 
+      let card2 = this.randomCard(); 
+      let card3 = this.randomCard(); 
+      let card4 = this.randomCard(); 
+      this.bot.hand[card1.uid] = card1; 
+      this.bot.hand[card2.uid] = card2;
+      this.bot.hand[card3.uid] = card3;
+      this.bot.hand[card4.uid] = card4;
+      this.humanTurn = true;
+      wild = true; 
+    } else if (value === "wild") {
+      wild = true; 
+    }
+    return wild; 
+  }
+  
+
 }
 
