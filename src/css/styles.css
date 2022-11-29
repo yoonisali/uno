@@ -105,3 +105,20 @@ pre {
 #color-space {
     padding-top: 3vh;
 }
+
+.hover-btn {
+    opacity: 40%;
+}
+
+.hover-btn.enabled:hover {
+    background-color: gray;
+}
+
+.hover-btn.enabled {
+    opacity: 100%;
+    cursor: pointer;
+}
+
+.hover-btn.enabled:hover {
+    background-color: gray;
+}
