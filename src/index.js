@@ -17,11 +17,30 @@ for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
   nCard.render(1).appendTo(botSpot);
 }
 
-const playSpot = $(".game-spot");
-const nCard = game.currentCard;
-nCard.render(2).appendTo(playSpot);
+displayGameCard(); 
+
+function displayGameCard () {
+  const playSpot = $(".game-spot");
+  const nCard = game.currentCard;
+  playSpot.html(nCard.render(2)); 
+}
 
 $(".player-card").on("click", (c) => {
   const elId = c.currentTarget.getAttribute("id").replace("card-", "");
   console.log(elId);
+  handlePlay(elId);
 });
+
+function handlePlay(uid) {
+  let valid = game.checkValid(uid); 
+  if (valid) {
+    game.playCard(uid);
+    displayGameCard(); 
+    removeCard(uid); 
+  }  
+}
+
+function removeCard(uid) {
+  const idName = `card-${uid}`;  
+  $(`#${idName}`).remove(); 
+}
