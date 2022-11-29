@@ -44,9 +44,12 @@ export default class Game {
 
   firstCard() {
     const randomNumber = Math.floor(Math.random() * 10);
+    const colorRandom = Math.floor(Math.random() * 4);
+    const possibleColors = ["red", "blue", "green", "yellow"];
     let card = this.randomCard();
-    if (card.value === "wild" || card.value === "wild4") {
+    if (card.value === "W" || card.value === "W4") {
       card.value = randomNumber.toString();
+      card.color = possibleColors[colorRandom];
     }
     return card;
   }

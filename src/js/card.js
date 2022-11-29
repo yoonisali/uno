@@ -11,10 +11,12 @@ export default class Card {
     let place = "player";
     let val = this.value;
     let color = this.color;
-    if (!isPlayer) {
+    if (isPlayer === 1) {
       place = "opponent";
       val = "Uno";
       color = "black";
+    } else if (isPlayer === 2) {
+      place = "game"; 
     }
     return $(`
     <div class="card ${place}-card" id="card-${this.uid}">

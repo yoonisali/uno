@@ -18,11 +18,6 @@
     justify-content: center;
 }
 
-.opponent-spot {
-    display: flex;
-    justify-content: center;
-}
-
 .center {
     position: absolute;
     top: 45vh;
