@@ -56,9 +56,12 @@
 
 .card-body {
     height: var(--card-height);
-    background-color: green;
+    background-color: black;
     box-shadow: 2px 2px 2px 2px rgb(188, 187, 187);
     border-radius: 4px;
+    width: 8rem;
+    max-width: 8rem;
+    overflow-wrap: break-word;
 }
 
 .opponent-card .card-body {
@@ -84,5 +87,6 @@
 
 .card-title {
     color: white;
-    font-size: 7rem;
+    font-size: 5rem;
+    text-shadow: 2px 2px 0 black;
 }
