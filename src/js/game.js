@@ -1,17 +1,19 @@
 import Card from "./card.js";
 
 export default class Game {
-  constructor(humanName) {
+  constructor() {
     this.humanTurn = true;
     this.uidCounter = 0;
+    this.turnType = "normal";
     this.bot = {
       hand: this.makeHand()
     };
     this.human = {
-      name: humanName,
       hand: this.makeHand()
     };
     this.currentCard = this.firstCard();
+    this.switchTurn = true;
+    this.stack = [];
   }
 
   makeHand() {
@@ -55,55 +57,68 @@ export default class Game {
   }
 
   changeTurn() {
-    let turn = this.humanTurn;
-    if (turn === true) {
-      turn = false;
-    } else if (turn === false) {
-      turn = true;
+    if (this.switchTurn) {
+      if (this.humanTurn) {
+        this.humanTurn = false;
+      } else {
+        this.humanTurn = true;
+      }
     }
   }
 
   checkValid(uid) {
     let card = this.human.hand[uid];
     let currentCard = this.currentCard;
-    if (card.color === currentCard.color || card.value === currentCard.value || card.value === "wild" || card.value === "wild4") {
-      return true;
-    } else {
-      return false;
+    if (this.turnType === "normal") {
+      if (card.color === currentCard.color || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (this.turnType === "stack") {
+      if(this.bot.hand[uid].value === currentCard) {
+        return true;
+      } else {
+        this.humanTurn ? 
+          this.applyStack(this.human.hand) : this.applyStack(this.bot.hand);
+        this.changeTurn();
+        return false;
+      }
     }
+  }
+
+  addStack(num) {
+    for (let i = 0; i < num; i++) {
+      this.stack.push(this.randomCard());
+    }
+    this.turnType = "stack";
+  }
+
+  applyStack(hand) {
+    for (let i = 0; i < this.stack.length; i++) {
+      hand.push(this.stack[i]);
+    }
+    this.stack = [];
   }
 
   playCard(uid) {
     let playedCard = this.human.hand[uid];
     let value = playedCard.value;
     this.currentCard = playedCard; 
+    this.switchTurn = true;
     delete this.human.hand[uid];
-    this.humanTurn = false;
     let wild = false;
     if (value === "reverse" || value === "skip") {
-      this.humanTurn = true; 
+      this.switchTurn = false;
     } else if (value === "+2") {
-      let card1 = this.randomCard(); 
-      let card2 = this.randomCard(); 
-      this.bot.hand[card1.uid] = card1; 
-      this.bot.hand[card2.uid] = card2;
-    } else if (value === "wild4") {
-      let card1 = this.randomCard(); 
-      let card2 = this.randomCard(); 
-      let card3 = this.randomCard(); 
-      let card4 = this.randomCard(); 
-      this.bot.hand[card1.uid] = card1; 
-      this.bot.hand[card2.uid] = card2;
-      this.bot.hand[card3.uid] = card3;
-      this.bot.hand[card4.uid] = card4;
-      this.humanTurn = true;
+      this.addStack(2);
+    } else if (value === "W4") {
+      this.addStack(4);
       wild = true; 
-    } else if (value === "wild") {
+    } else if (value === "W") {
       wild = true; 
     }
+    this.changeTurn();
     return wild; 
   }
-  
-
 }
-

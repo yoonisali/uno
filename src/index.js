@@ -4,7 +4,7 @@ import * as $ from "jquery";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Game from './js/game';
 
-const game = new Game("test");
+const game = new Game();
 const playerSpot = $(".bottom");
 for (let i = 0; i < Object.values(game.human.hand).length; i++) {
   const nCard = Object.values(game.human.hand)[i];
