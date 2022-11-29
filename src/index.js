@@ -17,17 +17,17 @@ for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
   nCard.render(1).appendTo(botSpot);
 }
 
-function displayGameCard () {
+function displayGameCard() {
   const playSpot = $(".game-spot");
   const nCard = game.currentCard;
-  playSpot.html(nCard.render(2)); 
+  playSpot.html(nCard.render(2));
 }
 
 displayGameCard();
 
 $(".player-card").on("click", (c) => {
   const elId = c.currentTarget.getAttribute("id").replace("card-", "");
-  console.log(elId);
+  handlePlay(elId);
 });
 
 $("#deck-btn").on("click", (c) => {
@@ -37,24 +37,24 @@ $("#deck-btn").on("click", (c) => {
       if (c.currentTarget.classList.contains("disabled") === false) {
         game.draw();
         game.canDraw = true;
-        console.log(game.human.hand);
         c.currentTarget.classList.add("disabled");
       }
     }, 500);
   }
-  handlePlay(elId);
 });
 
 function handlePlay(uid) {
-  let valid = game.checkValid(uid); 
-  if (valid) {
-    game.playCard(uid);
-    displayGameCard(); 
-    removeCard(uid); 
-  }  
+  let valid = game.checkValid(uid);
+  if (game.humanTurn === true) {
+    if (valid) {
+      game.playCard(uid);
+      displayGameCard();
+      removeCard(uid);
+    }
+  }
 }
 
 function removeCard(uid) {
-  const idName = `card-${uid}`;  
-  $(`#${idName}`).remove(); 
+  const idName = `card-${uid}`;
+  $(`#${idName}`).remove();
 }
