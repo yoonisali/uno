@@ -20,6 +20,8 @@ for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
 function displayGameCard() {
   const playSpot = $(".game-spot");
   const nCard = game.currentCard;
+  const colorSpot = $("#color-space");
+  colorSpot.get()[0].style.backgroundColor = nCard.color;
   playSpot.html(nCard.render(2));
 }
 
