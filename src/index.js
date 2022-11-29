@@ -1,4 +1,3 @@
-import Game from './js/game.js';
 import './css/styles.css';
 import "bootstrap";
 import * as $ from "jquery";
@@ -10,7 +9,4 @@ $(".opponent-card").html(`
     </div>
 `);
 
-let game = new Game("Yoonis");
-console.log(game); 
-console.log(game.checkValid(9));
 
