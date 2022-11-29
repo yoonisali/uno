@@ -34,7 +34,7 @@ $("#deck-btn").on("click", (c) => {
   if (game.canDraw) {
     game.canDraw = false;
     setTimeout(() => {
-      if (!c.currentTarget.classList.contains("disabled")) {
+      if (c.currentTarget.classList.contains("disabled") === false) {
         game.draw();
         game.canDraw = true;
         console.log(game.human.hand);

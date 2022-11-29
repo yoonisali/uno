@@ -1,4 +1,5 @@
 import Card from "./card.js";
+import * as $ from "jquery";
 
 export default class Game {
   constructor() {
@@ -45,14 +46,23 @@ export default class Game {
     return new Card(color, value, this.uidCounter);
   }
 
+  renderCard(card, player) {
+    const spot = $(`.${player}`);
+    card.appendTo(spot);
+  }
+
   draw() {
-    const ref = this;
-    function addCard(hand) {
-      const card = ref.randomCard();
+    const addCard = (hand) => {
+      const card = this.randomCard();
       hand[card.uid.toString()] = card;
-    }
-    this.humanTurn ?
+      return card;
+    };
+    const nCard = this.humanTurn ?
       addCard(this.human.hand) : addCard(this.human.bot);
+    const cardElement = this.humanTurn ?
+      nCard.render(true) : nCard.render(1);
+    this.humanTurn ?
+      this.renderCard(cardElement, "bottom") : this.renderCard(cardElement, "top");
     this.turnType = "draw";
   }
 
@@ -119,6 +129,8 @@ export default class Game {
   applyStack(hand) {
     for (let i = 0; i < this.stack.length; i++) {
       hand.push(this.stack[i]);
+      this.humanTurn ? 
+        this.renderCard(this.stack[i].render(), "bottom") : this.renderCard(this.stack[i], "top");
     }
     this.stack = [];
   }
@@ -130,7 +142,7 @@ export default class Game {
     this.switchTurn = true;
     delete this.human.hand[uid];
     let wild = false;
-    if (value === "reverse" || value === "skip") {
+    if (value === "§" || value === "Ø") {
       this.switchTurn = false;
     } else if (value === "+2") {
       this.addStack(2);
