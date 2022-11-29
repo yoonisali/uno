@@ -102,6 +102,7 @@ export default class Game {
     let playedCard = this.human.hand[uid];
     let value = playedCard.value;
     this.currentCard = playedCard; 
+    this.switchTurn = true;
     delete this.human.hand[uid];
     let wild = false;
     if (value === "reverse" || value === "skip") {
