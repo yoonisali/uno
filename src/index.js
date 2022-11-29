@@ -45,6 +45,14 @@ $("#deck-btn").on("click", (c) => {
   }
 });
 
+$("#end-btn").on("click", (c) => {
+  if (c.currentTarget.classList.contains("enabled")) {
+    console.log("end button pressed");
+    game.endButton();
+    $("#end-btn").get()[0].classList.remove("enabled");
+  }
+});
+
 function handlePlay(uid) {
   let valid = game.checkValid(uid);
   if (game.humanTurn === true) {

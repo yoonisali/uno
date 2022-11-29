@@ -64,6 +64,9 @@ export default class Game {
     this.humanTurn ?
       this.renderCard(cardElement, "bottom") : this.renderCard(cardElement, "top");
     this.turnType = "draw";
+    if (this.humanTurn) {
+      $("#end-btn").get()[0].classList.add("enabled");
+    }
   }
 
   firstCard() {
@@ -88,9 +91,11 @@ export default class Game {
     if (this.switchTurn) {
       if (this.humanTurn) {
         this.humanTurn = false;
+        console.log("bots turn");
       } else {
         $("#deck-btn").get()[0].classList.remove("disabled");
         this.humanTurn = true;
+        console.log("human turn");
       }
     }
   }
