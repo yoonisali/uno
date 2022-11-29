@@ -58,7 +58,7 @@ export default class Game {
       return card;
     };
     const nCard = this.humanTurn ?
-      addCard(this.human.hand) : addCard(this.human.bot);
+      addCard(this.human.hand) : addCard(this.bot.hand);
     const cardElement = this.humanTurn ?
       nCard.render(true) : nCard.render(1);
     this.humanTurn ?
@@ -76,6 +76,12 @@ export default class Game {
       card.color = possibleColors[colorRandom];
     }
     return card;
+  }
+
+  endButton() {
+    if(this.humanTurn === true && this.turnType === "draw") {
+      this.changeTurn();
+    }
   }
 
   changeTurn() {
