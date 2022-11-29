@@ -17,17 +17,31 @@ for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
   nCard.render(1).appendTo(botSpot);
 }
 
-displayGameCard(); 
-
 function displayGameCard () {
   const playSpot = $(".game-spot");
   const nCard = game.currentCard;
   playSpot.html(nCard.render(2)); 
 }
 
+displayGameCard();
+
 $(".player-card").on("click", (c) => {
   const elId = c.currentTarget.getAttribute("id").replace("card-", "");
   console.log(elId);
+});
+
+$("#deck-btn").on("click", (c) => {
+  if (game.canDraw) {
+    game.canDraw = false;
+    setTimeout(() => {
+      if (!c.currentTarget.classList.contains("disabled")) {
+        game.draw();
+        game.canDraw = true;
+        console.log(game.human.hand);
+        c.currentTarget.classList.add("disabled");
+      }
+    }, 500);
+  }
   handlePlay(elId);
 });
 
