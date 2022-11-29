@@ -14,5 +14,14 @@ for (let i = 0; i < Object.values(game.human.hand).length; i++) {
 const botSpot = $(".top");
 for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
   const nCard = Object.values(game.bot.hand)[i];
-  nCard.render(false).appendTo(botSpot);
+  nCard.render(1).appendTo(botSpot);
 }
+
+const playSpot = $(".game-spot");
+const nCard = game.currentCard;
+nCard.render(2).appendTo(playSpot);
+
+$(".player-card").on("click", (c) => {
+  const elId = c.currentTarget.getAttribute("id").replace("card-", "");
+  console.log(elId);
+});
