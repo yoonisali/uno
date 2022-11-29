@@ -87,7 +87,7 @@ export default class Game {
       let card2 = this.randomCard(); 
       this.bot.hand[card1.uid] = card1; 
       this.bot.hand[card2.uid] = card2;
-    } else if (value === "wild4") {
+    } else if (value === "W4") {
       let card1 = this.randomCard(); 
       let card2 = this.randomCard(); 
       let card3 = this.randomCard(); 
@@ -98,7 +98,7 @@ export default class Game {
       this.bot.hand[card4.uid] = card4;
       this.humanTurn = true;
       wild = true; 
-    } else if (value === "wild") {
+    } else if (value === "W") {
       wild = true; 
     }
     return wild; 

@@ -19,9 +19,10 @@ for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
 
 const playSpot = $(".game-spot");
 const nCard = game.currentCard;
-nCard.render(2).appendTo(playSpot);
+playSpot.html(nCard.render(2));
 
 $(".player-card").on("click", (c) => {
   const elId = c.currentTarget.getAttribute("id").replace("card-", "");
   console.log(elId);
 });
+
