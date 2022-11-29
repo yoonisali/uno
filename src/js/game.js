@@ -93,7 +93,7 @@ export default class Game {
       if(this.bot.hand[uid].value === currentCard) {
         return true;
       } else {
-        this.humanTurn ? 
+        this.humanTurn ?
           this.applyStack(this.human.hand) : this.applyStack(this.bot.hand);
         this.changeTurn();
         return false;
@@ -126,7 +126,7 @@ export default class Game {
   playCard(uid) {
     let playedCard = this.human.hand[uid];
     let value = playedCard.value;
-    this.currentCard = playedCard; 
+    this.currentCard = playedCard;
     this.switchTurn = true;
     delete this.human.hand[uid];
     let wild = false;
@@ -136,11 +136,11 @@ export default class Game {
       this.addStack(2);
     } else if (value === "W4") {
       this.addStack(4);
-      wild = true; 
+      wild = true;
     } else if (value === "W") {
-      wild = true; 
+      wild = true;
     }
     this.changeTurn();
-    return wild; 
+    return wild;
   }
 }
