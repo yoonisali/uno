@@ -116,8 +116,10 @@ export default class Game {
   checkValid(uid) {
     let card = this.human.hand[uid];
     let currentCard = this.currentCard;
+    const colorSpot = $("#color-space");
+    let colorIndic = colorSpot.get()[0].style.backgroundColor;
     if (this.turnType === "normal") {
-      if (card.color === currentCard.color || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
+      if (card.color === colorIndic || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
         return true;
       } else {
         return false;
@@ -134,7 +136,7 @@ export default class Game {
       }
     } else if (this.turnType === "draw") {
       this.turnType = "normal";
-      if (card.color === currentCard.color || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
+      if (card.color === colorIndic || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
         return true;
       } else {
         this.changeTurn();

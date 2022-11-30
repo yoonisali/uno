@@ -124,7 +124,7 @@ pre {
 .formContainer .green {
     padding: 12px 20px;
     border: none;
-    background-color: #8ebf42;
+    background-color: green;
     color: #fff;
     cursor: pointer;
     width: 100%;
@@ -135,7 +135,7 @@ pre {
 .formContainer .blue {
     padding: 12px 20px;
     border: none;
-    background-color: #3f9de0;
+    background-color: blue;
     color: #fff;
     cursor: pointer;
     width: 100%;
@@ -146,7 +146,7 @@ pre {
 .formContainer .yellow {
     padding: 12px 20px;
     border: none;
-    background-color: #dee03f;
+    background-color: yellow;
     color: #fff;
     cursor: pointer;
     width: 100%;
@@ -157,7 +157,7 @@ pre {
 .formContainer .red {
     padding: 12px 20px;
     border: none;
-    background-color: #e03f3f;
+    background-color: red;
     color: #fff;
     cursor: pointer;
     width: 100%;
