@@ -105,13 +105,17 @@ pre {
     width: 100%;
 }
 
+#wildMenu {
+    font-family: 'Playfair Display', serif;
+}
+
 .formPopup {
     display: none;
     position: fixed;
-    left: 45%;
-    top: 5%;
+    left: 30%;
+    top: 39%;
     transform: translate(-50%, 5%);
-    border: 3px solid #0a0a0a;
+    border: 3px solid #4b4b4b;
     z-index: 9;
 }
 
@@ -123,7 +127,7 @@ pre {
 
 .formContainer .green {
     padding: 12px 20px;
-    border: none;
+    border: 2px solid #000000;
     background-color: green;
     color: #fff;
     cursor: pointer;
@@ -134,7 +138,7 @@ pre {
 
 .formContainer .blue {
     padding: 12px 20px;
-    border: none;
+    border: 2px solid #000000;
     background-color: blue;
     color: #fff;
     cursor: pointer;
@@ -145,7 +149,7 @@ pre {
 
 .formContainer .yellow {
     padding: 12px 20px;
-    border: none;
+    border: 2px solid #000000;
     background-color: yellow;
     color: #fff;
     cursor: pointer;
@@ -156,7 +160,7 @@ pre {
 
 .formContainer .red {
     padding: 12px 20px;
-    border: none;
+    border: 2px solid #000000;
     background-color: red;
     color: #fff;
     cursor: pointer;
@@ -164,7 +168,7 @@ pre {
     margin-bottom: 15px;
     opacity: 0.8;
 }
-  
+
 .side-btn {
     width: 8vw;
     background-color: silver;
