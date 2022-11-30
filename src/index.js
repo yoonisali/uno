@@ -46,6 +46,14 @@ $("#deck-btn").on("click", (c) => {
   }
 });
 
+$("#uno-btn").on("click", (c) => {
+  if (c.currentTarget.classList.contains("enabled")) {
+    console.log("uno button pressed");
+    game.unoButton();
+    $("#uno-btn").get()[0].classList.remove("enabled");
+  }
+});
+
 $("#end-btn").on("click", (c) => {
   if (c.currentTarget.classList.contains("enabled")) {
     console.log("end button pressed");
