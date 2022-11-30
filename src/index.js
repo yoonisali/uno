@@ -20,6 +20,8 @@ for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
 function displayGameCard() {
   const playSpot = $(".game-spot");
   const nCard = game.currentCard;
+  const colorSpot = $("#color-space");
+  colorSpot.get()[0].style.backgroundColor = nCard.color;
   playSpot.html(nCard.render(2));
 }
 
@@ -35,11 +37,20 @@ $("#deck-btn").on("click", (c) => {
     game.canDraw = false;
     setTimeout(() => {
       if (c.currentTarget.classList.contains("disabled") === false) {
+        console.log("drew a card");
         game.draw();
         game.canDraw = true;
         c.currentTarget.classList.add("disabled");
       }
     }, 500);
+  }
+});
+
+$("#end-btn").on("click", (c) => {
+  if (c.currentTarget.classList.contains("enabled")) {
+    console.log("end button pressed");
+    game.endButton();
+    $("#end-btn").get()[0].classList.remove("enabled");
   }
 });
 

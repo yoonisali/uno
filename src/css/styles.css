@@ -2,10 +2,22 @@
     --card-width: 15vw;
     --card-height: 15vh;
     --card-pop: 4vh;
+    --side-pads: 1vh;
+}
+
+pre {
+    margin: 0%;
+    padding: 0%;
 }
 
 #deck-btn {
     cursor: pointer;
+    opacity: 100%;
+}
+
+#deck-btn.disabled {
+    cursor: default;
+    opacity: 65%;
 }
 
 .player-spot {
@@ -27,7 +39,8 @@
 }
 
 .center .deck {
-    margin-right: 3vw;
+    margin-left: 1.2vw;
+    margin-right: 1.2vw;
 }
 
 .bottom {
@@ -150,4 +163,34 @@
     width: 100%;
     margin-bottom: 15px;
     opacity: 0.8;
+}
+  
+.side-btn {
+    width: 8vw;
+    background-color: silver;
+    text-align: center;
+    padding-top: var(--side-pads);
+    padding-bottom: var(--side-pads);
+    margin-bottom: 1vh;
+}
+
+#color-space {
+    padding-top: 3vh;
+}
+
+.hover-btn {
+    opacity: 40%;
+}
+
+.hover-btn.enabled:hover {
+    background-color: gray;
+}
+
+.hover-btn.enabled {
+    opacity: 100%;
+    cursor: pointer;
+}
+
+.hover-btn.enabled:hover {
+    background-color: gray;
 }
