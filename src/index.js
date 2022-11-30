@@ -105,12 +105,19 @@ $("#end-btn").on("click", (c) => {
 
 const btnColors = ["green", "red", "yellow", "blue"];
 btnColors.forEach((cb) => {
-  document.getElementById(`${cb}Button`).addEventListener("click", function() {
+  document.getElementById(`${cb}Button`).addEventListener("click", function(ev) {
+    const element = ev.currentTarget;
+    const elColor = element.getAttribute("id").replace("Button", "");
+    const colorSpot = $("#color-space");
+    if (elColor === "green") {
+      colorSpot.get()[0].style.backgroundColor = "green";
+    } else if (elColor === "red") {
+      colorSpot.get()[0].style.backgroundColor = "red";
+    } else if (elColor === "yellow") {
+      colorSpot.get()[0].style.backgroundColor = "yellow";
+    } else if (elColor === "blue") {
+      colorSpot.get()[0].style.backgroundColor = "blue";
+    }
     game.closeForm();
   });
 });
-
-// document.getElementById("greenButton").addEventListener("submit", game.closeForm);
-// document.getElementById("redButton").addEventListener("submit", game.closeForm);
-// document.getElementById("yellowButton").addEventListener("submit", game.closeForm);
-// document.getElementById("blueButton").addEventListener("submit", game.closeForm)
