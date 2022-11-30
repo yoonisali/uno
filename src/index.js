@@ -4,18 +4,29 @@ import * as $ from "jquery";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Game from './js/game';
 
+//Opening Sequence
+
 const game = new Game();
-const playerSpot = $(".bottom");
-for (let i = 0; i < Object.values(game.human.hand).length; i++) {
-  const nCard = Object.values(game.human.hand)[i];
-  nCard.render(true).appendTo(playerSpot);
+displayOpeningHands();
+displayGameCard(); 
+
+//Rendering Function For Start of Game
+
+function displayOpeningHands() {
+  const playerSpot = $(".bottom");
+  for (let i = 0; i < Object.values(game.human.hand).length; i++) {
+    const nCard = Object.values(game.human.hand)[i];
+    nCard.render(true).appendTo(playerSpot);
+  }
+
+  const botSpot = $(".top");
+  for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
+    const nCard = Object.values(game.bot.hand)[i];
+    nCard.render(1).appendTo(botSpot);
+  }
 }
 
-const botSpot = $(".top");
-for (let i = 0; i < Object.values(game.bot.hand).length; i++) {
-  const nCard = Object.values(game.bot.hand)[i];
-  nCard.render(1).appendTo(botSpot);
-}
+//Rendering Function for Current Card (called once at start of game, then after each play. Replaces previous game card each time)
 
 function displayGameCard() {
   const playSpot = $(".game-spot");
@@ -25,12 +36,36 @@ function displayGameCard() {
   playSpot.html(nCard.render(2));
 }
 
-displayGameCard();
+//Rendering Function to remove cards from hand when played (player and bot hands)
+
+function removeCard(uid) {
+  const idName = `card-${uid}`;
+  $(`#${idName}`).remove();
+}
+
+//Game Play (checks if valid play, updates business values, renders game card, removes card from hand)
+
+export function handlePlay(uid, bot = false) {
+  let valid = game.checkValid(uid, false);
+  if (game.humanTurn === true || bot === true) {
+    if (valid) {
+      game.playCard(uid);
+      displayGameCard();
+      removeCard(uid);
+    }
+  }
+}
+
+//Event Listeners 
+  
+  //Click Cards (Play)
 
 $(".player-card").on("click", (c) => {
   const elId = c.currentTarget.getAttribute("id").replace("card-", "");
   handlePlay(elId);
 });
+
+  //Click Deck (Draw)
 
 $("#deck-btn").on("click", (c) => {
   if (game.canDraw) {
@@ -46,6 +81,8 @@ $("#deck-btn").on("click", (c) => {
   }
 });
 
+  //Uno Button (Call Uno)
+
 $("#uno-btn").on("click", (c) => {
   if (c.currentTarget.classList.contains("enabled")) {
     console.log("uno button pressed");
@@ -53,6 +90,8 @@ $("#uno-btn").on("click", (c) => {
     $("#uno-btn").get()[0].classList.remove("enabled");
   }
 });
+
+  //End Turn (can't play)
 
 $("#end-btn").on("click", (c) => {
   if (c.currentTarget.classList.contains("enabled")) {
@@ -62,21 +101,7 @@ $("#end-btn").on("click", (c) => {
   }
 });
 
-function handlePlay(uid) {
-  let valid = game.checkValid(uid);
-  if (game.humanTurn === true) {
-    if (valid) {
-      game.playCard(uid);
-      displayGameCard();
-      removeCard(uid);
-    }
-  }
-}
-
-function removeCard(uid) {
-  const idName = `card-${uid}`;
-  $(`#${idName}`).remove();
-}
+  // Set Color for Wild Card
 
 const btnColors = ["green", "red", "yellow", "blue"];
 btnColors.forEach((cb) => {
