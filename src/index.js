@@ -69,3 +69,15 @@ function removeCard(uid) {
   const idName = `card-${uid}`;
   $(`#${idName}`).remove();
 }
+
+const btnColors = ["green", "red", "yellow", "blue"];
+btnColors.forEach((cb) => {
+  document.getElementById(`${cb}Button`).addEventListener("click", function() {
+    game.closeForm();
+  });
+});
+
+// document.getElementById("greenButton").addEventListener("submit", game.closeForm);
+// document.getElementById("redButton").addEventListener("submit", game.closeForm);
+// document.getElementById("yellowButton").addEventListener("submit", game.closeForm);
+// document.getElementById("blueButton").addEventListener("submit", game.closeForm)
