@@ -11,6 +11,7 @@ export default class Game {
       hand: this.makeHand()
     };
     this.human = {
+      unoCall: false,
       hand: this.makeHand()
     };
     this.currentCard = this.firstCard();
@@ -82,6 +83,10 @@ export default class Game {
     return card;
   }
 
+  unoButton() {
+    this.human.unoCall = true;
+  }
+
   endButton() {
     if(this.humanTurn === true && this.turnType === "draw") {
       this.changeTurn();
@@ -102,6 +107,7 @@ export default class Game {
         $("#deck-btn").get()[0].classList.remove("disabled");
         $("#end-btn").get()[0].classList.add("enabled");
         this.humanTurn = true;
+        this.checkHand();
         console.log("human turn");
       }
     }
@@ -153,6 +159,18 @@ export default class Game {
     this.stack = [];
   }
 
+  cardCount(player) {
+    return Object.values(this[player].hand).length;
+  }
+
+  checkHand() {
+    if (this.humanTurn) {
+      if (this.cardCount("human") <= 2) {
+        $("#uno-btn").get()[0].classList.add("enabled");
+      }
+    }
+  }
+
   openForm() {
     this.formOpen = true;
     document.getElementById("popupForm").style.display = "block";
@@ -172,7 +190,9 @@ export default class Game {
     delete this.human.hand[uid];
     let wild = false;
     if (value === "§" || value === "Ø") {
+      this.checkHand();
       this.switchTurn = false;
+      console.log(`player has ${this.cardCount("human")} cards`);
     } else if (value === "+2") {
       this.addStack(2);
     } else if (value === "W4") {
