@@ -17,6 +17,7 @@ export default class Game {
     this.currentCard = this.firstCard();
     this.switchTurn = true;
     this.stack = [];
+    this.formOpen = false;
   }
 
   makeHand() {
@@ -170,6 +171,17 @@ export default class Game {
     }
   }
 
+  openForm() {
+    this.formOpen = true;
+    document.getElementById("popupForm").style.display = "block";
+  }
+
+  closeForm() {
+    this.formOpen = false;
+    document.getElementById("popupForm").style.display = "none";
+    this.changeTurn();
+  }
+
   playCard(uid) {
     let playedCard = this.human.hand[uid];
     let value = playedCard.value;
@@ -189,7 +201,10 @@ export default class Game {
     } else if (value === "W") {
       wild = true;
     }
-    this.changeTurn();
-    return wild;
+    if (wild === true) {
+      this.openForm();
+    } else {
+      this.changeTurn();
+    }
   }
 }
