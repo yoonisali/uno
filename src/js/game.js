@@ -1,4 +1,5 @@
 import Card from "./card.js";
+import {handlePlay} from "../index";
 import * as $ from "jquery";
 
 export default class Game {
@@ -20,6 +21,8 @@ export default class Game {
     this.formOpen = false;
   }
 
+//Start of Game
+
   makeHand() {
     let hand = {};
     for (let i = 0; i < 7; i++) {
@@ -27,6 +30,18 @@ export default class Game {
       hand[card.uid.toString()] = card;
     }
     return hand;
+  }
+
+  firstCard() {
+    const randomNumber = Math.floor(Math.random() * 10);
+    const colorRandom = Math.floor(Math.random() * 4);
+    const possibleColors = ["red", "blue", "green", "yellow"];
+    let card = this.randomCard();
+    if (card.value === "W" || card.value === "W4") {
+      card.value = randomNumber.toString();
+      card.color = possibleColors[colorRandom];
+    }
+    return card;
   }
 
 
@@ -71,17 +86,51 @@ export default class Game {
     }
   }
 
-  firstCard() {
-    const randomNumber = Math.floor(Math.random() * 10);
-    const colorRandom = Math.floor(Math.random() * 4);
-    const possibleColors = ["red", "blue", "green", "yellow"];
-    let card = this.randomCard();
-    if (card.value === "W" || card.value === "W4") {
-      card.value = randomNumber.toString();
-      card.color = possibleColors[colorRandom];
+  botPick() {
+    const checkBot = () => {
+      return [...Object.values(this.bot.hand).filter((c) => {
+        return this.checkValid(c.uid, false);
+      })];
+    };
+    const filtered = checkBot();
+    const botPlay = () => {
+      const choose = filtered[Math.floor(Math.random() * filtered.length)];
+      this.currentCard = choose;
+      handlePlay(choose.uid, true);
+    };
+    if (filtered.length > 0) {
+      botPlay();
+    } else {
+      if (this.turnType === "stack") {
+        this.applyStack(this.bot.hand);
+        this.changeTurn();
+      } else {
+        this.draw();
+        const newFiltered = checkBot();
+        if (newFiltered.length > 0) {
+          botPlay();
+        } else {
+          this.changeTurn();
+        }
+      }
     }
-    return card;
   }
+
+  botTurn() {
+    const checkUno = () => {
+      if (this.human.hand.length === 1 && !this.human.unoCall) {
+        this.addStack(2);
+        this.applyStack(this.human.hand, true);
+      }
+    };
+    setTimeout(() => {
+      $("#uno-btn").get()[0].classList.remove("enabled");
+      checkUno(); 
+      this.botPick();
+    }, 1);
+  }
+
+  //Buttons
 
   unoButton() {
     this.human.unoCall = true;
@@ -102,6 +151,7 @@ export default class Game {
         this.humanTurn = false;
         $("#deck-btn").get()[0].classList.add("disabled");
         $("#end-btn").get()[0].classList.remove("enabled");
+        this.botTurn();
         console.log("bots turn");
       } else {
         $("#deck-btn").get()[0].classList.remove("disabled");
@@ -113,8 +163,9 @@ export default class Game {
     }
   }
 
-  checkValid(uid) {
-    let card = this.human.hand[uid];
+  checkValid(uid, change = true) {
+    let card = this.humanTurn ?
+      this.human.hand[uid] : this.bot.hand[uid];
     let currentCard = this.currentCard;
     const colorSpot = $("#color-space");
     let colorIndic = colorSpot.get()[0].style.backgroundColor;
@@ -132,18 +183,36 @@ export default class Game {
         this.humanTurn ?
           this.applyStack(this.human.hand) : this.applyStack(this.bot.hand);
         this.changeTurn();
-        return false;
       }
-    } else if (this.turnType === "draw") {
+    };
+    if (card) {
+      console.log(card);
+      if (this.turnType === "normal") {
+        if (card.color === currentCard.color || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
+          return true;
+        } else {
+          return false;
+        }
+      } else if (this.turnType === "stack") {
+        if(!this.humanTurn && this.bot.hand[uid].value === currentCard) {
+          return true;
+        } else {
+          doChange();
+          return false;
+        }
+      } else if (this.turnType === "draw") {
       this.turnType = "normal";
       if (card.color === colorIndic || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
         return true;
       } else {
         this.changeTurn();
         return false;
+        }
       }
     }
   }
+
+  //Stack Functions
 
   addStack(num) {
     for (let i = 0; i < num; i++) {
@@ -152,11 +221,15 @@ export default class Game {
     this.turnType = "stack";
   }
 
-  applyStack(hand) {
+  applyStack(hand, unoFault = false) {
     for (let i = 0; i < this.stack.length; i++) {
-      hand.push(this.stack[i]);
-      this.humanTurn ? 
-        this.renderCard(this.stack[i].render(), "bottom") : this.renderCard(this.stack[i], "top");
+      hand[this.stack[i].uid] = this.stack[i];
+      let placeCheck = this.humanTurn;
+      if (unoFault) {
+        placeCheck = unoFault;
+      }
+      placeCheck ? 
+        this.renderCard(this.stack[i].render(true), "bottom") : this.renderCard(this.stack[i].render(1), "top");
     }
     this.stack = [];
   }
@@ -173,6 +246,8 @@ export default class Game {
     }
   }
 
+//Wild Card Pop Up 
+
   openForm() {
     this.formOpen = true;
     document.getElementById("popupForm").style.display = "block";
@@ -184,16 +259,23 @@ export default class Game {
     this.changeTurn();
   }
 
+
+
   playCard(uid) {
-    let playedCard = this.human.hand[uid];
+    let playedCard = this.humanTurn ?
+      this.human.hand[uid] : this.bot.hand[uid];
     let value = playedCard.value;
     this.currentCard = playedCard;
     this.switchTurn = true;
-    delete this.human.hand[uid];
+    delete(this.humanTurn ?
+      this.human.hand[uid] : this.bot.hand[uid]);
     let wild = false;
     if (value === "§" || value === "Ø") {
       this.checkHand();
       this.switchTurn = false;
+      if (!this.humanTurn) {
+        this.botTurn();
+      }
       console.log(`player has ${this.cardCount("human")} cards`);
     } else if (value === "+2") {
       this.addStack(2);
