@@ -156,6 +156,13 @@ btnColors.forEach((cb) => {
     } else if (elColor === "blue") {
       colorSpot.get()[0].style.backgroundColor = "blue";
     }
-    game.closeForm();
+    game.closeWild();
   });
+});
+
+  //new game button
+
+window.addEventListener("load", () => {
+  const newGameBttn = document.getElementById("newGame");
+  newGameBttn.addEventListener("click", game.newGame());
 });

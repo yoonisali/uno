@@ -258,12 +258,21 @@ export default class Game {
 
 //Wild Card Pop Up 
 
-  openForm() {
+  openWild() {
     this.formOpen = true;
     document.getElementById("popupForm").style.display = "block";
   }
 
-  closeForm() {
+  openWin() {
+    this.formOpen = true;
+    document.getElementById("popupWin").style.display = "block";
+  }
+
+  newGame() {
+    window.loaction.reload();
+  }
+
+  closeWild() {
     this.formOpen = false;
     document.getElementById("popupForm").style.display = "none";
     this.changeTurn();
@@ -301,7 +310,7 @@ export default class Game {
       }
       if (wild === true) {
         if (this.humanTurn) {
-          this.openForm();
+          this.openWild();
         } else {
           this.botWild();
         }
