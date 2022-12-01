@@ -179,7 +179,8 @@ pre {
 }
 
 #color-space {
-    padding-top: 3vh;
+    color: white;
+    text-shadow: 2px 2px 0 black;
 }
 
 .hover-btn {

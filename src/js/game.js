@@ -1,5 +1,5 @@
 import Card from "./card.js";
-import {handlePlay} from "../index";
+import {handlePlay, colorSpot, btnColors} from "../index";
 import * as $ from "jquery";
 
 export default class Game {
@@ -69,49 +69,68 @@ export default class Game {
   }
 
   draw() {
-    const addCard = (hand) => {
-      const card = this.randomCard();
-      hand[card.uid.toString()] = card;
-      return card;
-    };
-    const nCard = this.humanTurn ?
-      addCard(this.human.hand) : addCard(this.bot.hand);
-    const cardElement = this.humanTurn ?
-      nCard.render(true) : nCard.render(1);
-    this.humanTurn ?
-      this.renderCard(cardElement, "bottom") : this.renderCard(cardElement, "top");
-    this.turnType = "draw";
-    if (this.humanTurn) {
-      $("#end-btn").get()[0].classList.add("enabled");
+    if (this.canDraw && this.turnType !== "stack") {
+      this.addStack(1);
+      this.humanTurn ?
+        this.applyStack(this.human.hand) : this.applyStack(this.bot.hand);
+      this.turnType = "draw";
+      this.canDraw = false;
     }
   }
 
   botPick() {
     const checkBot = () => {
-      return [...Object.values(this.bot.hand).filter((c) => {
-        return this.checkValid(c.uid, false);
-      })];
+      const botArray = [...Object.values(this.bot.hand)];
+      const check = botArray.filter((c) => {
+        const vCheck = this.checkValid(c.uid);
+        console.log(vCheck);
+        if (vCheck) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      return check;
     };
-    const filtered = checkBot();
-    const botPlay = () => {
+
+    const botPlay = (filtered) => {
       const choose = filtered[Math.floor(Math.random() * filtered.length)];
-      this.currentCard = choose;
-      handlePlay(choose.uid, true);
+      if (choose) {
+        this.currentCard = choose;
+        if (choose.uid) {
+          handlePlay(choose.uid, true);
+        }
+      }
     };
-    if (filtered.length > 0) {
-      botPlay();
-    } else {
-      if (this.turnType === "stack") {
-        this.applyStack(this.bot.hand);
-        this.changeTurn();
+
+    this.switchTurn = true;
+    if (this.turnType === "normal") {
+      this.canDraw = true;
+      const filtered = checkBot();
+      if (filtered.length > 0) {
+        botPlay(filtered);
       } else {
         this.draw();
-        const newFiltered = checkBot();
-        if (newFiltered.length > 0) {
-          botPlay();
-        } else {
-          this.changeTurn();
-        }
+        this.turnType = "draw";
+        this.botPick();
+      }
+    } else if (this.turnType === "stack") {
+      const filtered = checkBot();
+      if (filtered.length > 0) {
+        botPlay(filtered);
+      } else {
+        this.canDraw = false;
+        this.applyStack(this.bot.hand);
+        this.changeTurn();
+      }
+    } else if (this.turnType === "draw") {
+      this.canDraw = false;
+      const filtered = checkBot();
+      if (filtered.length > 0) {
+        botPlay(filtered);
+      } else {
+        this.turnType = "normal";
+        this.changeTurn();
       }
     }
   }
@@ -120,14 +139,21 @@ export default class Game {
     const checkUno = () => {
       if (this.human.hand.length === 1 && !this.human.unoCall) {
         this.addStack(2);
-        this.applyStack(this.human.hand, true);
+        this.applyStack(this.human.hand);
       }
     };
     setTimeout(() => {
       $("#uno-btn").get()[0].classList.remove("enabled");
       checkUno(); 
       this.botPick();
-    }, 1);
+    }, 2000);
+  }
+
+  botWild() {
+    setTimeout(() => {
+      colorSpot.get()[0].style.backgroundColor = btnColors[Math.floor(Math.random() * btnColors.length)];
+      this.changeTurn();
+    }, 1000);
   }
 
   //Buttons
@@ -137,76 +163,63 @@ export default class Game {
   }
 
   endButton() {
-    if(this.humanTurn === true && this.turnType === "draw") {
-      this.changeTurn();
-    } else if(this.humanTurn && this.turnType === "normal") {
-      this.draw(); 
-      this.changeTurn(); 
+    if (this.humanTurn) {
+      if(this.turnType === "normal") {
+        this.changeTurn(); 
+      } else {
+        this.turnType = "normal";
+        this.applyStack(this.human.hand);
+        this.changeTurn();
+      }
     }
   }
 
   changeTurn() {
     if (this.switchTurn) {
+      if (this.turnType !== "stack") {
+        this.canDraw = true;
+      }
       if (this.humanTurn) {
         this.humanTurn = false;
-        $("#deck-btn").get()[0].classList.add("disabled");
-        $("#end-btn").get()[0].classList.remove("enabled");
         this.botTurn();
         console.log("bots turn");
+        console.log(this);
       } else {
-        $("#deck-btn").get()[0].classList.remove("disabled");
-        $("#end-btn").get()[0].classList.add("enabled");
+        this.canDraw = true;
         this.humanTurn = true;
         this.checkHand();
         console.log("human turn");
+        console.log(this);
       }
     }
   }
 
-  checkValid(uid, change = true) {
+  checkValid(uid) {
     let card = this.humanTurn ?
       this.human.hand[uid] : this.bot.hand[uid];
     let currentCard = this.currentCard;
     const colorSpot = $("#color-space");
     let colorIndic = colorSpot.get()[0].style.backgroundColor;
-    if (this.turnType === "normal") {
-      if (card.color === colorIndic || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (this.turnType === "stack") {
-      this.turnType = "normal";
-      if(this.bot.hand[uid].value === currentCard) {
-        return true;
-      } else {
-        this.humanTurn ?
-          this.applyStack(this.human.hand) : this.applyStack(this.bot.hand);
-        this.changeTurn();
-      }
-    };
     if (card) {
       console.log(card);
       if (this.turnType === "normal") {
-        if (card.color === currentCard.color || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
+        if (card.color === colorIndic || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
           return true;
         } else {
           return false;
         }
       } else if (this.turnType === "stack") {
-        if(!this.humanTurn && this.bot.hand[uid].value === currentCard) {
+        if(card.value === currentCard.value) {
           return true;
         } else {
-          doChange();
           return false;
         }
       } else if (this.turnType === "draw") {
-      this.turnType = "normal";
-      if (card.color === colorIndic || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
-        return true;
-      } else {
-        this.changeTurn();
-        return false;
+        if (card.color === colorIndic || card.value === currentCard.value || card.value === "W" || card.value === "W4") {
+          this.turnType = "normal";
+          return true;
+        } else {
+          return false;
         }
       }
     }
@@ -221,17 +234,14 @@ export default class Game {
     this.turnType = "stack";
   }
 
-  applyStack(hand, unoFault = false) {
+  applyStack(hand) {
     for (let i = 0; i < this.stack.length; i++) {
-      hand[this.stack[i].uid] = this.stack[i];
-      let placeCheck = this.humanTurn;
-      if (unoFault) {
-        placeCheck = unoFault;
-      }
-      placeCheck ? 
+      hand[`${this.stack[i].uid}`] = this.stack[i];
+      hand === this.human.hand ? 
         this.renderCard(this.stack[i].render(true), "bottom") : this.renderCard(this.stack[i].render(1), "top");
     }
     this.stack = [];
+    this.turnType = "normal";
   }
 
   cardCount(player) {
@@ -260,35 +270,44 @@ export default class Game {
   }
 
 
-
   playCard(uid) {
     let playedCard = this.humanTurn ?
       this.human.hand[uid] : this.bot.hand[uid];
-    let value = playedCard.value;
-    this.currentCard = playedCard;
-    this.switchTurn = true;
-    delete(this.humanTurn ?
-      this.human.hand[uid] : this.bot.hand[uid]);
-    let wild = false;
-    if (value === "§" || value === "Ø") {
-      this.checkHand();
-      this.switchTurn = false;
-      if (!this.humanTurn) {
-        this.botTurn();
+    if (playedCard) {
+      let value = playedCard.value;
+      this.currentCard = playedCard;
+      this.switchTurn = true;
+      if (this.humanTurn) {
+        delete this.human.hand[uid];
+      } else {
+        delete this.bot.hand[uid];
       }
-      console.log(`player has ${this.cardCount("human")} cards`);
-    } else if (value === "+2") {
-      this.addStack(2);
-    } else if (value === "W4") {
-      this.addStack(4);
-      wild = true;
-    } else if (value === "W") {
-      wild = true;
-    }
-    if (wild === true) {
-      this.openForm();
-    } else {
-      this.changeTurn();
+      let wild = false;
+      if (value === "§" || value === "Ø") {
+        this.checkHand();
+        this.switchTurn = false;
+        this.canDraw = true;
+        if (!this.humanTurn) {
+          this.botTurn();
+        }
+        console.log(`player has ${this.cardCount("human")} cards`);
+      } else if (value === "+2") {
+        this.addStack(2);
+      } else if (value === "W4") {
+        this.addStack(4);
+        wild = true;
+      } else if (value === "W") {
+        wild = true;
+      }
+      if (wild === true) {
+        if (this.humanTurn) {
+          this.openForm();
+        } else {
+          this.botWild();
+        }
+      } else {
+        this.changeTurn();
+      }
     }
   }
 }
