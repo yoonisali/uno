@@ -8,7 +8,7 @@ import Game from './js/game';
 
 const game = new Game();
 displayOpeningHands();
-displayGameCard(); 
+displayGameCard();
 
 //Rendering Function For Start of Game
 
@@ -88,12 +88,12 @@ export function handlePlay(uid, bot = false) {
 }
 
 //Event Listeners 
-  
-  //Click Cards (Play)
+
+//Click Cards (Play)
 setInterval(() => {
   $(".player-card").get().forEach((c) => {
     if (!c.classList.contains("listen")) {
-      c.addEventListener("click", () => {        
+      c.addEventListener("click", () => {
         const elId = c.getAttribute("id").replace("card-", "");
         if (game.humanTurn === false) {
           console.log("not your turn");
@@ -105,7 +105,7 @@ setInterval(() => {
   });
 }, 1500);
 
-  //Click Deck (Draw)
+//Click Deck (Draw)
 
 $("#deck-btn").on("click", () => {
   if (game.canDraw) {
@@ -121,7 +121,7 @@ $("#deck-btn").on("click", () => {
   }
 });
 
-  //Uno Button (Call Uno)
+//Uno Button (Call Uno)
 
 $("#uno-btn").on("click", (c) => {
   if (c.currentTarget.classList.contains("enabled")) {
@@ -131,7 +131,7 @@ $("#uno-btn").on("click", (c) => {
   }
 });
 
-  //End Turn (can't play)
+//End Turn (can't play)
 
 $("#end-btn").on("click", (c) => {
   if (c.currentTarget.classList.contains("enabled")) {
@@ -141,11 +141,11 @@ $("#end-btn").on("click", (c) => {
   }
 });
 
-  // Set Color for Wild Card
+// Set Color for Wild Card
 
 export const btnColors = ["green", "red", "yellow", "blue"];
 btnColors.forEach((cb) => {
-  document.getElementById(`${cb}Button`).addEventListener("click", function(ev) {
+  document.getElementById(`${cb}Button`).addEventListener("click", function (ev) {
     const element = ev.currentTarget;
     const elColor = element.getAttribute("id").replace("Button", "");
     if (elColor === "green") {
@@ -161,9 +161,7 @@ btnColors.forEach((cb) => {
   });
 });
 
-  //new game button
+//new game button
 
-window.addEventListener("load", () => {
-  const newGameBttn = document.getElementById("newGame");
-  newGameBttn.addEventListener("click", game.newGame());
-});
+const newGameBttn = document.getElementById("newGame");
+newGameBttn.addEventListener("click", game.newGame());

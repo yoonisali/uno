@@ -1,5 +1,5 @@
 import Card from "./card.js";
-import {handlePlay, colorSpot, btnColors} from "../index";
+import { handlePlay, colorSpot, btnColors } from "../index";
 import * as $ from "jquery";
 
 export default class Game {
@@ -22,7 +22,7 @@ export default class Game {
     this.gameEnd = false;
   }
 
-//Start of Game
+  //Start of Game
 
   makeHand() {
     let hand = {};
@@ -146,7 +146,7 @@ export default class Game {
     };
     setTimeout(() => {
       $("#uno-btn").get()[0].classList.remove("enabled");
-      checkUno(); 
+      checkUno();
       this.botPick();
     }, 2000);
   }
@@ -166,8 +166,8 @@ export default class Game {
 
   endButton() {
     if (this.humanTurn) {
-      if(this.turnType === "normal") {
-        this.changeTurn(); 
+      if (this.turnType === "normal") {
+        this.changeTurn();
       } else {
         this.turnType = "normal";
         this.applyStack(this.human.hand);
@@ -194,7 +194,7 @@ export default class Game {
         console.log(this);
       }
     }
-  
+
   }
 
   checkValid(uid) {
@@ -212,7 +212,7 @@ export default class Game {
           return false;
         }
       } else if (this.turnType === "stack") {
-        if(card.value === currentCard.value) {
+        if (card.value === currentCard.value) {
           return true;
         } else {
           return false;
@@ -240,7 +240,7 @@ export default class Game {
   applyStack(hand) {
     for (let i = 0; i < this.stack.length; i++) {
       hand[`${this.stack[i].uid}`] = this.stack[i];
-      hand === this.human.hand ? 
+      hand === this.human.hand ?
         this.renderCard(this.stack[i].render(true), "bottom") : this.renderCard(this.stack[i].render(1), "top");
     }
     this.stack = [];
@@ -259,7 +259,7 @@ export default class Game {
     }
   }
 
-//Wild Card Pop Up 
+  //Wild Card Pop Up 
 
   openWild() {
     this.formOpen = true;
@@ -269,10 +269,12 @@ export default class Game {
   openWin() {
     this.formOpen = true;
     document.getElementById("popupWin").style.display = "block";
+    document.getElementById("gameover").style.display = "none";
   }
 
   newGame() {
-    window.loaction.reload();
+    //window.location.reload();
+    return false;
   }
 
   closeWild() {
@@ -323,16 +325,16 @@ export default class Game {
     }
   }
 
-// End of Game 
+  // End of Game 
 
-endGame() {
-  const humanHand = [...Object.values(this.human.hand)];
-  const botsHand = [...Object.values(this.bot.hand)];
-  console.log("botshand", botsHand);
-  console.log("humanHand", humanHand);
-  if (humanHand.length === 0 || botsHand.length === 0) {
-    this.gameEnd = true;
-    window.alert("GAME OVER");
-    } 
+  endGame() {
+    const humanHand = [...Object.values(this.human.hand)];
+    const botsHand = [...Object.values(this.bot.hand)];
+    console.log("botshand", botsHand);
+    console.log("humanHand", humanHand);
+    if (humanHand.length === 0 || botsHand.length === 0) {
+      this.gameEnd = true;
+      this.openWin();
+    }
   }
 }
