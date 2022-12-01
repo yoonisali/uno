@@ -133,28 +133,6 @@ export default class Game {
         this.changeTurn();
       }
     }
-    // this.canDraw = true;
-    // this.switchTurn = true;
-    // const filtered = checkBot();
-
-    // console.log("filtered:");
-    // console.log(filtered);
-    // if (filtered.length > 0) {
-    //   botPlay();
-    // } else {
-    //   if (this.turnType === "stack") {
-    //     this.applyStack(this.bot.hand);
-    //     this.changeTurn();
-    //   } else if (this.turnType === "normal") {
-    //     this.draw();
-    //     const newFiltered = checkBot();
-    //     if (newFiltered.length > 0) {
-    //       botPlay();
-    //     } else {
-    //       this.changeTurn();
-    //     }
-    //   }
-    // }
   }
 
   botTurn() {
@@ -203,13 +181,11 @@ export default class Game {
       }
       if (this.humanTurn) {
         this.humanTurn = false;
-        $("#deck-btn").get()[0].classList.add("disabled");
         this.botTurn();
         console.log("bots turn");
         console.log(this);
       } else {
         this.canDraw = true;
-        $("#deck-btn").get()[0].classList.remove("disabled");
         this.humanTurn = true;
         this.checkHand();
         console.log("human turn");
@@ -310,6 +286,7 @@ export default class Game {
       if (value === "§" || value === "Ø") {
         this.checkHand();
         this.switchTurn = false;
+        this.canDraw = true;
         if (!this.humanTurn) {
           this.botTurn();
         }

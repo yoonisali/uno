@@ -180,7 +180,7 @@ pre {
 
 #color-space {
     color: white;
-    padding-top: 3vh;
+    text-shadow: 2px 2px 0 black;
 }
 
 .hover-btn {

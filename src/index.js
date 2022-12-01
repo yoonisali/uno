@@ -52,11 +52,17 @@ setInterval(() => {
     $("#end-btn").get()[0].classList.remove("enabled");
   }
   if (game.turnType === "stack") {
-    colorSpot.get()[0].style.paddingTop = "0vh";
     colorSpot.text("Stack");
+    game.humanTurn ?
+      colorSpot.text("You: stack") : colorSpot.text("Bot: stack");
   } else {
-    colorSpot.get()[0].style.paddingTop = "3vh";
-    colorSpot.text("");
+    game.humanTurn ?
+      colorSpot.text("You") : colorSpot.text("Bot");
+  }
+  if (game.canDraw) {
+    $("#deck-btn").get()[0].classList.remove("disabled");
+  } else {
+    $("#deck-btn").get()[0].classList.add("disabled");
   }
 }, 250);
 
@@ -100,15 +106,15 @@ setInterval(() => {
 
   //Click Deck (Draw)
 
-$("#deck-btn").on("click", (c) => {
+$("#deck-btn").on("click", () => {
   if (game.canDraw) {
-    game.canDraw = false;
     setTimeout(() => {
-      if (c.currentTarget.classList.contains("disabled") === false) {
-        console.log("drew a card");
+      if (game.humanTurn && game.turnType === "normal") {
         game.canDraw = true;
+        console.log("drew a card");
         game.draw();
-        c.currentTarget.classList.add("disabled");
+      } else {
+        game.canDraw = false;
       }
     }, 500);
   }
