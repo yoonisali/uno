@@ -109,6 +109,20 @@ pre {
     font-family: 'Playfair Display', serif;
 }
 
+#gameover {
+    display: block;
+}
+
+.winPopup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, 5%);
+    border: 3px solid #4b4b4b;
+    z-index: 9;
+}
+
 .formPopup {
     display: none;
     position: fixed;
