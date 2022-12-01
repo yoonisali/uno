@@ -41,6 +41,25 @@ function displayGameCard() {
   }
 }
 
+export const colorSpot = $("#color-space");
+setInterval(() => {
+  if (game.currentCard.color) {
+    displayGameCard();
+  }
+  if (game.humanTurn && game.turnType !== "normal") {
+    $("#end-btn").get()[0].classList.add("enabled");
+  } else {
+    $("#end-btn").get()[0].classList.remove("enabled");
+  }
+  if (game.turnType === "stack") {
+    colorSpot.get()[0].style.paddingTop = "0vh";
+    colorSpot.text("Stack");
+  } else {
+    colorSpot.get()[0].style.paddingTop = "3vh";
+    colorSpot.text("");
+  }
+}, 250);
+
 //Rendering Function to remove cards from hand when played (player and bot hands)
 
 function removeCard(uid) {
@@ -77,7 +96,7 @@ setInterval(() => {
       });
     }
   });
-}, 250);
+}, 1500);
 
   //Click Deck (Draw)
 
@@ -110,19 +129,18 @@ $("#uno-btn").on("click", (c) => {
 $("#end-btn").on("click", (c) => {
   if (c.currentTarget.classList.contains("enabled")) {
     console.log("end button pressed");
-    game.endButton();
     $("#end-btn").get()[0].classList.remove("enabled");
+    game.endButton();
   }
 });
 
   // Set Color for Wild Card
 
-const btnColors = ["green", "red", "yellow", "blue"];
+export const btnColors = ["green", "red", "yellow", "blue"];
 btnColors.forEach((cb) => {
   document.getElementById(`${cb}Button`).addEventListener("click", function(ev) {
     const element = ev.currentTarget;
     const elColor = element.getAttribute("id").replace("Button", "");
-    const colorSpot = $("#color-space");
     if (elColor === "green") {
       colorSpot.get()[0].style.backgroundColor = "green";
     } else if (elColor === "red") {

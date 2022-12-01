@@ -1,5 +1,5 @@
 import Card from "./card.js";
-import {handlePlay} from "../index";
+import {handlePlay, colorSpot, btnColors} from "../index";
 import * as $ from "jquery";
 
 export default class Game {
@@ -69,60 +69,113 @@ export default class Game {
   }
 
   draw() {
-    if (this.canDraw) {
+    if (this.canDraw && this.turnType !== "stack") {
       this.addStack(1);
       this.humanTurn ?
         this.applyStack(this.human.hand) : this.applyStack(this.bot.hand);
       this.turnType = "draw";
       this.canDraw = false;
-      if (this.humanTurn) {
-        $("#end-btn").get()[0].classList.add("enabled");
-      }
     }
   }
 
   botPick() {
     const checkBot = () => {
-      return [...Object.values(this.bot.hand).filter((c) => {
-        return this.checkValid(c.uid, false);
-      })];
-    };
-    const filtered = checkBot();
-    const botPlay = () => {
-      const choose = filtered[Math.floor(Math.random() * filtered.length)];
-      this.currentCard = choose;
-      handlePlay(choose.uid, true);
-    };
-    if (filtered.length > 0) {
-      botPlay();
-    } else {
-      if (this.turnType === "stack") {
-        this.applyStack(this.bot.hand);
-        this.changeTurn();
-      } else {
-        this.draw();
-        const newFiltered = checkBot();
-        if (newFiltered.length > 0) {
-          botPlay();
+      const botArray = [...Object.values(this.bot.hand)];
+      const check = botArray.filter((c) => {
+        const vCheck = this.checkValid(c.uid);
+        console.log(vCheck);
+        if (vCheck) {
+          return true;
         } else {
-          this.changeTurn();
+          return false;
+        }
+      });
+      return check;
+    };
+
+    const botPlay = (filtered) => {
+      const choose = filtered[Math.floor(Math.random() * filtered.length)];
+      if (choose) {
+        this.currentCard = choose;
+        if (choose.uid) {
+          handlePlay(choose.uid, true);
         }
       }
+    };
+
+    this.switchTurn = true;
+    if (this.turnType === "normal") {
+      this.canDraw = true;
+      const filtered = checkBot();
+      if (filtered.length > 0) {
+        botPlay(filtered);
+      } else {
+        this.draw();
+        this.turnType = "draw";
+        this.botPick();
+      }
+    } else if (this.turnType === "stack") {
+      const filtered = checkBot();
+      if (filtered.length > 0) {
+        botPlay(filtered);
+      } else {
+        this.canDraw = false;
+        this.applyStack(this.bot.hand);
+        this.changeTurn();
+      }
+    } else if (this.turnType === "draw") {
+      this.canDraw = false;
+      const filtered = checkBot();
+      if (filtered.length > 0) {
+        botPlay(filtered);
+      } else {
+        this.turnType = "normal";
+        this.changeTurn();
+      }
     }
+    // this.canDraw = true;
+    // this.switchTurn = true;
+    // const filtered = checkBot();
+
+    // console.log("filtered:");
+    // console.log(filtered);
+    // if (filtered.length > 0) {
+    //   botPlay();
+    // } else {
+    //   if (this.turnType === "stack") {
+    //     this.applyStack(this.bot.hand);
+    //     this.changeTurn();
+    //   } else if (this.turnType === "normal") {
+    //     this.draw();
+    //     const newFiltered = checkBot();
+    //     if (newFiltered.length > 0) {
+    //       botPlay();
+    //     } else {
+    //       this.changeTurn();
+    //     }
+    //   }
+    // }
   }
 
   botTurn() {
     const checkUno = () => {
       if (this.human.hand.length === 1 && !this.human.unoCall) {
         this.addStack(2);
-        this.applyStack(this.human.hand, true);
+        this.applyStack(this.human.hand);
       }
     };
     setTimeout(() => {
       $("#uno-btn").get()[0].classList.remove("enabled");
       checkUno(); 
       this.botPick();
-    }, 1);
+    }, 2000);
+  }
+
+  botWild() {
+    setTimeout(() => {
+      colorSpot.get()[0].style.backgroundColor = btnColors[Math.floor(Math.random() * btnColors.length)];
+      this.changeTurn();
+    }, 1000);
   }
 
   //Buttons
@@ -132,11 +185,14 @@ export default class Game {
   }
 
   endButton() {
-    if(this.humanTurn === true && this.turnType === "draw") {
-      this.changeTurn();
-    } else if(this.humanTurn && this.turnType === "normal") {
-      this.draw(); 
-      this.changeTurn(); 
+    if (this.humanTurn) {
+      if(this.turnType === "normal") {
+        this.changeTurn(); 
+      } else {
+        this.turnType = "normal";
+        this.applyStack(this.human.hand);
+        this.changeTurn();
+      }
     }
   }
 
@@ -148,16 +204,16 @@ export default class Game {
       if (this.humanTurn) {
         this.humanTurn = false;
         $("#deck-btn").get()[0].classList.add("disabled");
-        $("#end-btn").get()[0].classList.remove("enabled");
         this.botTurn();
         console.log("bots turn");
+        console.log(this);
       } else {
         this.canDraw = true;
         $("#deck-btn").get()[0].classList.remove("disabled");
-        $("#end-btn").get()[0].classList.add("enabled");
         this.humanTurn = true;
         this.checkHand();
         console.log("human turn");
+        console.log(this);
       }
     }
   }
@@ -177,7 +233,7 @@ export default class Game {
           return false;
         }
       } else if (this.turnType === "stack") {
-        if(!this.humanTurn && this.bot.hand[uid].value === currentCard) {
+        if(card.value === currentCard.value) {
           return true;
         } else {
           return false;
@@ -202,22 +258,14 @@ export default class Game {
     this.turnType = "stack";
   }
 
-  applyStack(hand, unoFault = false) {
+  applyStack(hand) {
     for (let i = 0; i < this.stack.length; i++) {
-      let placeCheck = this.humanTurn;
-      if (placeCheck) {
-        this.human.hand[this.stack[i].uid] = this.stack[i];
-      } else {
-        this.bot.hand[this.stack[i].uid] = this.stack[i];
-      }
-      hand[this.stack[i].uid] = this.stack[i];
-      if (unoFault) {
-        placeCheck = unoFault;
-      }
-      placeCheck ? 
+      hand[`${this.stack[i].uid}`] = this.stack[i];
+      hand === this.human.hand ? 
         this.renderCard(this.stack[i].render(true), "bottom") : this.renderCard(this.stack[i].render(1), "top");
     }
     this.stack = [];
+    this.turnType = "normal";
   }
 
   cardCount(player) {
@@ -246,7 +294,6 @@ export default class Game {
   }
 
 
-
   playCard(uid) {
     let playedCard = this.humanTurn ?
       this.human.hand[uid] : this.bot.hand[uid];
@@ -254,8 +301,11 @@ export default class Game {
       let value = playedCard.value;
       this.currentCard = playedCard;
       this.switchTurn = true;
-      delete(this.humanTurn ?
-        this.human.hand[uid] : this.bot.hand[uid]);
+      if (this.humanTurn) {
+        delete this.human.hand[uid];
+      } else {
+        delete this.bot.hand[uid];
+      }
       let wild = false;
       if (value === "§" || value === "Ø") {
         this.checkHand();
@@ -273,7 +323,11 @@ export default class Game {
         wild = true;
       }
       if (wild === true) {
-        this.openForm();
+        if (this.humanTurn) {
+          this.openForm();
+        } else {
+          this.botWild();
+        }
       } else {
         this.changeTurn();
       }
