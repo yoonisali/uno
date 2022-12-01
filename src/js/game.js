@@ -26,7 +26,7 @@ export default class Game {
 
   makeHand() {
     let hand = {};
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 7; i++) {
       const card = this.randomCard();
       hand[card.uid.toString()] = card;
     }
