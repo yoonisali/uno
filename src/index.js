@@ -33,7 +33,12 @@ function displayGameCard() {
   const nCard = game.currentCard;
   const colorSpot = $("#color-space");
   colorSpot.get()[0].style.backgroundColor = nCard.color;
-  playSpot.html(nCard.render(2));
+  if (nCard) {
+    const rend = nCard.render(2);
+    if (rend) {
+      playSpot.html(nCard.render(2));
+    }
+  }
 }
 
 //Rendering Function to remove cards from hand when played (player and bot hands)
@@ -46,7 +51,7 @@ function removeCard(uid) {
 //Game Play (checks if valid play, updates business values, renders game card, removes card from hand)
 
 export function handlePlay(uid, bot = false) {
-  let valid = game.checkValid(uid, false);
+  let valid = game.checkValid(`${uid}`, false);
   if (game.humanTurn === true || bot === true) {
     if (valid) {
       game.playCard(uid);
@@ -59,11 +64,20 @@ export function handlePlay(uid, bot = false) {
 //Event Listeners 
   
   //Click Cards (Play)
-
-$(".player-card").on("click", (c) => {
-  const elId = c.currentTarget.getAttribute("id").replace("card-", "");
-  handlePlay(elId);
-});
+setInterval(() => {
+  $(".player-card").get().forEach((c) => {
+    if (!c.classList.contains("listen")) {
+      c.addEventListener("click", () => {        
+        const elId = c.getAttribute("id").replace("card-", "");
+        if (game.humanTurn === false) {
+          console.log("not your turn");
+        } else {
+          handlePlay(elId);
+        }
+      });
+    }
+  });
+}, 250);
 
   //Click Deck (Draw)
 
@@ -73,8 +87,8 @@ $("#deck-btn").on("click", (c) => {
     setTimeout(() => {
       if (c.currentTarget.classList.contains("disabled") === false) {
         console.log("drew a card");
-        game.draw();
         game.canDraw = true;
+        game.draw();
         c.currentTarget.classList.add("disabled");
       }
     }, 500);
