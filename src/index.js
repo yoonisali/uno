@@ -82,6 +82,7 @@ export function handlePlay(uid, bot = false) {
       game.playCard(uid);
       displayGameCard();
       removeCard(uid);
+      game.endGame();
     }
   }
 }

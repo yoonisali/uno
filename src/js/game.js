@@ -19,13 +19,14 @@ export default class Game {
     this.switchTurn = true;
     this.stack = [];
     this.formOpen = false;
+    this.gameEnd = false;
   }
 
 //Start of Game
 
   makeHand() {
     let hand = {};
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 1; i++) {
       const card = this.randomCard();
       hand[card.uid.toString()] = card;
     }
@@ -193,6 +194,7 @@ export default class Game {
         console.log(this);
       }
     }
+  
   }
 
   checkValid(uid) {
@@ -264,6 +266,11 @@ export default class Game {
     document.getElementById("popupForm").style.display = "block";
   }
 
+  openWin() {
+    this.formOpen = true;
+    document.getElementById("popupWin").style.display = "block";
+  }
+
   closeForm() {
     this.formOpen = false;
     document.getElementById("popupForm").style.display = "none";
@@ -310,5 +317,18 @@ export default class Game {
         this.changeTurn();
       }
     }
+  }
+
+// End of Game 
+
+endGame() {
+  const humanHand = [...Object.values(this.human.hand)];
+  const botsHand = [...Object.values(this.bot.hand)];
+  console.log("botshand", botsHand);
+  console.log("humanHand", humanHand);
+  if (humanHand.length === 0 || botsHand.length === 0) {
+    this.gameEnd = true;
+    window.alert("GAME OVER");
+    } 
   }
 }
