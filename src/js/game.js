@@ -137,7 +137,8 @@ export default class Game {
 
   botTurn() {
     const checkUno = () => {
-      if (this.human.hand.length === 1 && !this.human.unoCall) {
+      const handArray = Object.values(this.human.hand);
+      if (handArray.length === 1 && !this.human.unoCall) {
         this.addStack(2);
         this.applyStack(this.human.hand);
       }
