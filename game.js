@@ -1,4 +1,4 @@
-import Card from "./card.js";
+import Card from "../card.js";
 import { handlePlay, colorSpot, btnColors } from "../index";
 import * as $ from "jquery";
 
